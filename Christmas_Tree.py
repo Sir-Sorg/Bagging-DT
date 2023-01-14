@@ -37,8 +37,8 @@ def bootstrap(X, Y):
 
 
 def majority(vote):
-    vote=list(vote)
     # find most frequent element in a list
+    vote = list(vote)
     return max(set(vote), key=vote.count)
 
 
@@ -77,7 +77,6 @@ votes = np.transpose(votes)
 
 # Finding the majority vote
 predicted_Y = [majority(vote) for vote in votes]
-
 
 # figure out my tree accuracy
 accuracy = classification_report(y_test, predicted_Y)
