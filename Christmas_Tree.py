@@ -51,20 +51,24 @@ X = dummyVariables(X)
 X_train, X_test, y_train, y_test = train_test_split(
     X, Y, test_size=0.3, random_state=24)
 
+# make bootstrap subset
 NUMBER_OF_BOOTSTRAP = 5
 bootstrapDataset = [bootstrap(X_train, y_train)
                     for _ in range(NUMBER_OF_BOOTSTRAP)]
+
+# list bagging classifires
 classifiers = []
 for index in range(NUMBER_OF_BOOTSTRAP):
+    # Define Decision Thee
     tree = DecisionTreeClassifier(criterion="entropy", max_depth=4)
     tree.fit(*bootstrapDataset[index])
     classifiers.append(tree)
 
+# Voting from all classifiers
+votes = [tree.predict(X_test) for tree in classifiers]
+votes = np.array(votes)
+votes = np.transpose(votes)
 
-# Define Decision Thee
-tree = DecisionTreeClassifier(criterion="entropy", max_depth=4)
-tree.fit(X_train, y_train)
-predicted = tree.predict(X_test)
 
 # figure out my tree accuracy
 accuracy = classification_report(y_test, predicted)
