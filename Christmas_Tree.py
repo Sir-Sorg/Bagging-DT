@@ -29,7 +29,8 @@ def dummyVariables(features):
 
 def bootstrap(X, Y):
     dataset = np.column_stack((X, Y))
-    newDataset = dataset[np.random.choice(dataset.shape[0], size=dataset.shape[0])]
+    newDataset = dataset[np.random.choice(
+        dataset.shape[0], size=dataset.shape[0])]
     new_X = newDataset[:, :-1]
     new_Y = newDataset[:, -1]
     return new_X, new_Y
@@ -51,8 +52,14 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, Y, test_size=0.3, random_state=24)
 
 NUMBER_OF_BOOTSTRAP = 5
-bootstrapDataset=[bootstrap(X_train, y_train) for _ in range(NUMBER_OF_BOOTSTRAP)]
-print(bootstrapDataset)
+bootstrapDataset = [bootstrap(X_train, y_train)
+                    for _ in range(NUMBER_OF_BOOTSTRAP)]
+classifiers = []
+for index in range(NUMBER_OF_BOOTSTRAP):
+    tree = DecisionTreeClassifier(criterion="entropy", max_depth=4)
+    tree.fit(*bootstrapDataset[index])
+    classifiers.append(tree)
+
 
 # Define Decision Thee
 tree = DecisionTreeClassifier(criterion="entropy", max_depth=4)
