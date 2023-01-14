@@ -17,7 +17,7 @@ def cleanData(data):
     return list(filter(lambda thisList: False if '?' in thisList else True, data))
 
 
-def dummyFeature(features):
+def dummyVariables(features):
     for column in range(features.shape[1]):
         # 0,1,2,3,...,21
         featureStatus = set(features[:, column])
@@ -27,22 +27,32 @@ def dummyFeature(features):
     return features
 
 
+def bootstrap(X, Y):
+    dataset = np.column_stack((X, Y))
+    newDataset = dataset[np.random.choice(dataset.shape[0], size=dataset.shape[0])]
+    new_X = newDataset[:, :-1]
+    new_Y = newDataset[:, -1]
+    return new_X, new_Y
+
+
 # Read Data
 fileAddress = './train+dev+test.csv'
 data = readData(fileAddress)
-print(len(data))
 data = cleanData(data)
-print(len(data))
-data = np.array(data)[1:]
+data = np.array(data)[1:]  # remove headers
 
 # Seprate Feature and Lable
 X = data[:, 1:]
 Y = data[:, 0]
-X = dummyFeature(X)
+X = dummyVariables(X)
 
 # split train and test subset I use 70% & 30%
 X_train, X_test, y_train, y_test = train_test_split(
     X, Y, test_size=0.3, random_state=24)
+
+NUMBER_OF_BOOTSTRAP = 5
+bootstrapDataset=[bootstrap(X_train, y_train) for _ in range(NUMBER_OF_BOOTSTRAP)]
+print(bootstrapDataset)
 
 # Define Decision Thee
 tree = DecisionTreeClassifier(criterion="entropy", max_depth=4)
