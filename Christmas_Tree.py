@@ -36,6 +36,12 @@ def bootstrap(X, Y):
     return new_X, new_Y
 
 
+def majority(vote):
+    vote=list(vote)
+    # find most frequent element in a list
+    return max(set(vote), key=vote.count)
+
+
 # Read Data
 fileAddress = './train+dev+test.csv'
 data = readData(fileAddress)
@@ -69,7 +75,10 @@ votes = [tree.predict(X_test) for tree in classifiers]
 votes = np.array(votes)
 votes = np.transpose(votes)
 
+# Finding the majority vote
+predicted_Y = [majority(vote) for vote in votes]
+
 
 # figure out my tree accuracy
-accuracy = classification_report(y_test, predicted)
+accuracy = classification_report(y_test, predicted_Y)
 print(accuracy)
