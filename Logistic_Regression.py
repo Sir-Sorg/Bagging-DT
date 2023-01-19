@@ -45,6 +45,7 @@ X = data[:, 1:]
 Y = data[:, 0]
 X = dummyVariables(X)
 
+# Standarding Data
 X = standardization(X)
 
 # split train and test subset I use 70% & 30%
@@ -52,3 +53,11 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, Y, test_size=0.3, random_state=24)
 print('Train set:', X_train.shape,  y_train.shape)
 print('Test set:', X_test.shape,  y_test.shape)
+
+# Defind and Train Classifire
+logisticRegression = LogisticRegression(solver='liblinear')
+logisticRegression.fit(X_train, y_train)
+yhat = logisticRegression.predict(X_test)
+
+# figure out my tree accuracy
+print(classification_report(y_test, yhat))
